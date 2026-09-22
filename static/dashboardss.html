@@ -1,0 +1,419 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fleet Console — EV Climate Intelligence Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #EFF1EC;
+    --panel: #FFFFFF;
+    --border: #D7DBD2;
+    --ink: #1B2420;
+    --muted: #5B655C;
+    --good: #256B54;
+    --good-bg: #E4EEE9;
+    --flag: #B5651D;
+    --flag-bg: #F5E9DC;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 15px;
+    line-height: 1.5;
+  }
+
+  .mono { font-family: 'IBM Plex Mono', monospace; }
+
+  header {
+    padding: 28px 32px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  header h1 {
+    margin: 0 0 4px;
+    font-size: 19px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  header p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 13px;
+  }
+
+  .hero {
+    display: flex;
+    gap: 48px;
+    padding: 28px 32px;
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+
+  .hero-figure .value {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 38px;
+    font-weight: 500;
+    line-height: 1;
+  }
+
+  .hero-figure .label {
+    margin-top: 6px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  .console {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: 1px;
+    background: var(--border);
+  }
+
+  @media (max-width: 900px) {
+    .console { grid-template-columns: 1fr; }
+  }
+
+  .panel {
+    background: var(--panel);
+    padding: 24px 32px;
+  }
+
+  .panel h2 {
+    margin: 0 0 16px;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+
+  th {
+    text-align: left;
+    font-weight: 500;
+    color: var(--muted);
+    font-size: 12px;
+    padding: 0 8px 8px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  td {
+    padding: 10px 8px 10px 0;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+
+  .status-dot {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    margin-right: 6px;
+  }
+
+  .status-dot.online { background: var(--good); }
+  .status-dot.offline { background: var(--flag); }
+
+  .pill {
+    display: inline-block;
+    font-size: 11px;
+    padding: 2px 7px;
+    border: 1px solid currentColor;
+    border-radius: 2px;
+  }
+
+  .pill.good { color: var(--good); background: var(--good-bg); border-color: var(--good); }
+  .pill.flag { color: var(--flag); background: var(--flag-bg); border-color: var(--flag); }
+
+  .no-data-note {
+    color: var(--muted);
+    font-style: italic;
+  }
+
+  .controls {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+
+  input {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    padding: 8px 10px;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    background: var(--paper);
+    color: var(--ink);
+  }
+
+  input#vin-filter { flex: 1; min-width: 140px; }
+  input#admin-key { width: 200px; }
+
+  button {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 8px 16px;
+    border: 1px solid var(--ink);
+    border-radius: 2px;
+    background: var(--ink);
+    color: var(--panel);
+    cursor: pointer;
+  }
+
+  button:hover { opacity: 0.85; }
+  button:disabled { opacity: 0.4; cursor: default; }
+
+  .report-block {
+    margin-top: 4px;
+  }
+
+  .report-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 7px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+  }
+
+  .report-row .k { color: var(--muted); }
+  .report-row .v { font-family: 'IBM Plex Mono', monospace; }
+
+  .error-box {
+    color: var(--flag);
+    background: var(--flag-bg);
+    border: 1px solid var(--flag);
+    border-radius: 2px;
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+
+  footer {
+    padding: 16px 32px 28px;
+    color: var(--muted);
+    font-size: 12px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Fleet console</h1>
+  <p>EV Climate Intelligence Platform — GEE774 pilot</p>
+</header>
+
+<section class="hero">
+  <div class="hero-figure">
+    <div class="value mono" id="hero-avoided">—</div>
+    <div class="label">kg CO2e avoided, fleet-wide</div>
+  </div>
+  <div class="hero-figure">
+    <div class="value mono" id="hero-online">—</div>
+    <div class="label">vehicles online</div>
+  </div>
+  <div class="hero-figure">
+    <div class="value mono" id="hero-total">—</div>
+    <div class="label">vehicles registered</div>
+  </div>
+</section>
+
+<div class="console">
+
+  <section class="panel">
+    <h2>Fleet status</h2>
+    <div id="fleet-body">
+      <p class="no-data-note">Loading…</p>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>Verification report</h2>
+    <div class="controls">
+      <input id="vin-filter" class="mono" placeholder="VIN (blank = whole fleet)">
+      <input id="admin-key" class="mono" type="password" placeholder="Admin key">
+      <button id="run-report">Generate</button>
+    </div>
+    <div id="report-body">
+      <p class="no-data-note">Enter the admin key and generate a report.</p>
+    </div>
+  </section>
+
+</div>
+
+<footer id="footer-note">Fleet status refreshes every 10 seconds.</footer>
+
+<script>
+  const REFRESH_MS = 10000;
+
+  function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str == null ? '' : String(str);
+    return div.innerHTML;
+  }
+
+  function formatTime(isoString) {
+    if (!isoString) return '—';
+    const d = new Date(isoString);
+    if (isNaN(d.getTime())) return isoString;
+    return d.toLocaleString();
+  }
+
+  async function loadFleetStatus() {
+    const body = document.getElementById('fleet-body');
+    try {
+      const resp = await fetch('/fleet/status');
+      if (!resp.ok) throw new Error('HTTP ' + resp.status);
+      const data = await resp.json();
+
+      document.getElementById('hero-online').textContent = data.online_count;
+      document.getElementById('hero-total').textContent = data.vehicle_count;
+
+      if (!data.vehicles || data.vehicles.length === 0) {
+        body.innerHTML = '<p class="no-data-note">No vehicles have reported yet.</p>';
+        return;
+      }
+
+      let totalAvoided = 0;
+
+      const rows = data.vehicles.map(v => {
+        const statusClass = v.online ? 'online' : 'offline';
+        const statusLabel = v.online ? 'Online' : 'Offline';
+        const flags = (v.last_reading_flags || []).filter(Boolean);
+        const flagPill = flags.length
+          ? '<span class="pill flag">' + flags.map(escapeHtml).join(', ') + '</span>'
+          : '<span class="pill good">Clean</span>';
+
+        let batteryCell, locationCell;
+        if (v.state === 'NO_TRUSTWORTHY_DATA_YET' || !v.last_known_good) {
+          batteryCell = '<span class="no-data-note">No trustworthy reading yet</span>';
+          locationCell = '<span class="no-data-note">—</span>';
+        } else {
+          const g = v.last_known_good;
+          batteryCell = g.state_of_charge.toFixed(1) + '% (' + escapeHtml(g.battery_status) + ')';
+          locationCell = g.location.latitude.toFixed(4) + ', ' + g.location.longitude.toFixed(4);
+        }
+
+        return '<tr>' +
+          '<td class="mono">' + escapeHtml(v.vin) + '</td>' +
+          '<td><span class="status-dot ' + statusClass + '"></span>' + statusLabel + '</td>' +
+          '<td>' + batteryCell + '</td>' +
+          '<td class="mono">' + locationCell + '</td>' +
+          '<td>' + flagPill + '</td>' +
+          '<td class="mono">' + formatTime(v.last_seen) + '</td>' +
+          '</tr>';
+      }).join('');
+
+      body.innerHTML =
+        '<table><thead><tr>' +
+        '<th>VIN</th><th>Status</th><th>Battery</th><th>Last known position</th><th>Latest reading</th><th>Last seen</th>' +
+        '</tr></thead><tbody>' + rows + '</tbody></table>';
+
+    } catch (err) {
+      body.innerHTML = '<div class="error-box">Could not load fleet status: ' + escapeHtml(err.message) + '</div>';
+    }
+  }
+
+  async function loadFleetSummaryForHero() {
+    // Pulls the fleet-wide avoided total via the verification report,
+    // but only if an admin key has already been entered this session.
+    const adminKey = document.getElementById('admin-key').value;
+    if (!adminKey) return;
+    try {
+      const resp = await fetch('/reports/verification', { headers: { 'X-Admin-Key': adminKey } });
+      if (!resp.ok) return;
+      const data = await resp.json();
+      if (data.climate_impact) {
+        document.getElementById('hero-avoided').textContent =
+          data.climate_impact.total_avoided_co2e_kg.toLocaleString();
+      }
+    } catch (err) {
+      // Silent — this is a bonus figure, not critical path.
+    }
+  }
+
+  async function runReport() {
+    const button = document.getElementById('run-report');
+    const body = document.getElementById('report-body');
+    const vin = document.getElementById('vin-filter').value.trim();
+    const adminKey = document.getElementById('admin-key').value;
+
+    if (!adminKey) {
+      body.innerHTML = '<div class="error-box">Enter the admin key first.</div>';
+      return;
+    }
+
+    button.disabled = true;
+    body.innerHTML = '<p class="no-data-note">Generating…</p>';
+
+    try {
+      const url = '/reports/verification' + (vin ? '?vin=' + encodeURIComponent(vin) : '');
+      const resp = await fetch(url, { headers: { 'X-Admin-Key': adminKey } });
+
+      if (resp.status === 401) {
+        body.innerHTML = '<div class="error-box">Invalid admin key.</div>';
+        return;
+      }
+      if (!resp.ok) throw new Error('HTTP ' + resp.status);
+
+      const data = await resp.json();
+
+      if (data.message) {
+        body.innerHTML = '<p class="no-data-note">' + escapeHtml(data.message) + '</p>';
+        return;
+      }
+
+      const dq = data.data_quality;
+      const ci = data.climate_impact;
+      const ai = data.audit_integrity;
+
+      const exclusionReasons = Object.entries(dq.exclusion_reasons || {})
+        .map(([k, v]) => escapeHtml(k) + ': ' + v).join(', ') || 'none';
+
+      body.innerHTML =
+        '<div class="report-block">' +
+        row('Scope', data.vin) +
+        row('Total readings', dq.total_readings) +
+        row('Included in carbon pool', dq.included_in_carbon_pool) +
+        row('Excluded', dq.excluded_from_carbon_pool + ' (' + exclusionReasons + ')') +
+        row('Total distance', ci.total_distance_km + ' km') +
+        row('Total avoided CO2e', ci.total_avoided_co2e_kg + ' kg') +
+        row('Audit chain intact', ai.payload_hashes_verified ? 'Yes' : 'NO — tampering detected at id ' + ai.tamper_detected_at_id) +
+        '</div>';
+
+      // Feed the fleet-wide hero number from this report if it was fleet-wide
+      if (!vin && ci) {
+        document.getElementById('hero-avoided').textContent = ci.total_avoided_co2e_kg.toLocaleString();
+      }
+
+    } catch (err) {
+      body.innerHTML = '<div class="error-box">Could not generate report: ' + escapeHtml(err.message) + '</div>';
+    } finally {
+      button.disabled = false;
+    }
+  }
+
+  function row(label, value) {
+    return '<div class="report-row"><span class="k">' + escapeHtml(label) + '</span><span class="v">' + escapeHtml(value) + '</span></div>';
+  }
+
+  document.getElementById('run-report').addEventListener('click', runReport);
+
+  loadFleetStatus();
+  setInterval(loadFleetStatus, REFRESH_MS);
+</script>
+
+</body>
+</html>
