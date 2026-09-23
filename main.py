@@ -15,7 +15,7 @@ from rate_limit import limiter
 import simulation_runner
 from config import settings
 
-app = FastAPI(title="EV Climate Intelligence Platform")
+app = FastAPI(title="Evcai — EV Climate AI")
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
