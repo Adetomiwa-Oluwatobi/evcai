@@ -219,6 +219,47 @@ async def test_vehicle_detail_404_for_unknown_vin(client):
 
 
 @pytest.mark.asyncio
+async def test_fleet_status_includes_totals_without_admin_key(client, admin_key):
+    """
+    Regression test: the dashboard's hero 'avoided emissions' card reads
+    these fields directly from /fleet/status (no auth), not from the
+    admin-gated verifier report. This locks in that the field exists,
+    requires no auth, and matches the authoritative verifier total.
+    """
+    device_key = await register_device(client, admin_key, vin="GEE774-TRK-001")
+
+    await client.post(
+        "/telemetry", headers={"X-Device-Key": device_key},
+        json={
+            "vin": "GEE774-TRK-001", "timestamp": "2026-01-01T10:00:00",
+            "battery_voltage": 58.0, "state_of_charge": 80.0, "kwh_consumed": 0.0,
+            "latitude": 9.0, "longitude": 7.0, "speed_kmh": 0.0,
+        },
+    )
+    await client.post(
+        "/telemetry", headers={"X-Device-Key": device_key},
+        json={
+            "vin": "GEE774-TRK-001", "timestamp": "2026-01-01T10:05:00",
+            "battery_voltage": 57.5, "state_of_charge": 75.0, "kwh_consumed": 0.3,
+            "latitude": 9.02, "longitude": 7.0, "speed_kmh": 25.0,
+        },
+    )
+
+    # No auth header at all — this must work for the dashboard's public view
+    fleet_resp = await client.get("/fleet/status")
+    fleet_body = fleet_resp.json()
+
+    assert "total_avoided_co2e_kg" in fleet_body
+    assert "total_distance_km" in fleet_body
+    assert fleet_body["total_avoided_co2e_kg"] > 0
+
+    verifier_resp = await client.get("/reports/verification", headers={"X-Admin-Key": admin_key})
+    verifier_body = verifier_resp.json()
+
+    assert fleet_body["total_avoided_co2e_kg"] == verifier_body["climate_impact"]["total_avoided_co2e_kg"]
+
+
+@pytest.mark.asyncio
 async def test_fleet_status_falls_back_to_last_known_good(client, admin_key):
     device_key = await register_device(client, admin_key, vin="GEE774-TRK-001")
 

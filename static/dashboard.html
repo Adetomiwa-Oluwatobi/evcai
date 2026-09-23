@@ -689,6 +689,7 @@
       // Update KPI Header Cards
       document.getElementById('hero-online').textContent = `${data.online_count}/${data.vehicle_count}`;
       document.getElementById('hero-total').textContent = data.vehicle_count;
+      document.getElementById('hero-avoided').textContent = Number(data.total_avoided_co2e_kg || 0).toLocaleString();
 
       // Set progress bar width
       const ratio = data.vehicle_count > 0 ? (data.online_count / data.vehicle_count) * 100 : 0;

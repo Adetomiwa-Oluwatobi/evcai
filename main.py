@@ -453,9 +453,24 @@ async def fleet_status(session: AsyncSession = Depends(get_session)):
             },
         })
 
+    # Fleet-wide totals. Note: e_avoided_kg and distance_km are already
+    # zeroed out at ingestion time for any reading that failed the
+    # confidence check (see POST /telemetry), so a plain SUM here
+    # automatically excludes flagged/untrustworthy readings — no extra
+    # filtering needed.
+    totals_result = await session.execute(
+        select(
+            func.sum(TelemetryReading.e_avoided_kg),
+            func.sum(TelemetryReading.distance_km),
+        )
+    )
+    total_avoided, total_distance = totals_result.one()
+
     return {
         "vehicle_count": len(fleet),
         "online_count": sum(1 for v in fleet if v["online"]),
+        "total_avoided_co2e_kg": round(total_avoided or 0.0, 3),
+        "total_distance_km": round(total_distance or 0.0, 3),
         "vehicles": fleet,
     }
 
