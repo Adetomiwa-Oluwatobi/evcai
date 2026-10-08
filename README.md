@@ -1,4 +1,4 @@
-# Evcai — EV Climate AI
+# ECIDRA
 
 A telemetry-driven MRV (Measurement, Reporting & Verification) backend that
 converts electric vehicle activity into auditable, high-integrity climate

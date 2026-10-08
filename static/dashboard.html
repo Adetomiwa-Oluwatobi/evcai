@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en" class="dark light-theme">
 <head>
   <meta charset="UTF-8">
+  <meta name="theme-color" content="#071A24">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Evcai — EV Climate AI</title>
+  <title>ECIDRA — Climate Intelligence Infrastructure</title>
 
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -13,24 +14,15 @@
       theme: {
         extend: {
           colors: {
-            brand: {
-              50: '#f0fdf4',
-              100: '#dcfce7',
-              500: '#22c55e',
-              600: '#16a34a',
-              700: '#15803d',
-              900: '#14532d',
-            },
-            dark: {
-              bg: '#0B0F17',
-              card: '#111827',
-              border: '#1F2937',
-              hover: '#1F2937'
-            }
+            brand: {50:'#EAF6F5',100:'#D2EEED',300:'#7FE0DD',400:'#4FD3CF',500:'#2FC4C0',600:'#297D7C',700:'#1F6463',900:'#0F3B3B'},
+            emerald: {400:'#4FD3CF',500:'#2FC4C0',700:'#1F6463'},
+            amber: {400:'#F0743C',500:'#E4572E'},
+            gray: {100:'#EEF3F4',200:'#DDE6E9',300:'#C3D1D6',400:'#9FB3BA',500:'#7C939B',600:'#4C6A78',700:'#24475A',800:'#163240',900:'#0C2330',950:'#06151D'},
+            dark: {bg:'#071A24',card:'#0C2330',border:'#163240',hover:'#163240'}
           },
           fontFamily: {
-            sans: ['Inter', 'sans-serif'],
-            mono: ['JetBrains Mono', 'monospace'],
+            sans: ['IBM Plex Sans', 'sans-serif'],
+            mono: ['IBM Plex Mono', 'monospace'],
           }
         }
       }
@@ -40,30 +32,29 @@
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
 
   <style>
     body {
-      font-family: 'Inter', sans-serif;
-      background-color: #0B0F17;
-      color: #F3F4F6;
+      font-family: 'IBM Plex Sans', sans-serif;
+      background-color: #071A24;
+      color: #EEF3F4;
     }
     
     .glass-card {
-      background: rgba(17, 24, 39, 0.7);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: #0C2330;
+      border: 1px solid #163240;
     }
     
     .glass-card-hover {
       transition: all 0.2s ease-in-out;
     }
     .glass-card-hover:hover {
-      border-color: rgba(34, 197, 94, 0.3);
-      box-shadow: 0 4px 20px -2px rgba(34, 197, 94, 0.1);
+      border-color: rgba(47, 196, 192, 0.3);
+      box-shadow: 0 4px 20px -2px rgba(47, 196, 192, 0.1);
     }
 
     /* Custom Scrollbar */
@@ -72,15 +63,23 @@
       height: 6px;
     }
     ::-webkit-scrollbar-track {
-      background: #0B0F17;
+      background: #071A24;
     }
     ::-webkit-scrollbar-thumb {
-      background: #1F2937;
+      background: #163240;
       border-radius: 3px;
     }
     ::-webkit-scrollbar-thumb:hover {
-      background: #374151;
+      background: #24475A;
     }
+
+    /* ECIDRA brand: flat bordered panels, mono labels, teal top rule */
+    .uppercase { font-family: 'IBM Plex Mono', monospace; letter-spacing: 0.08em; }
+    .rounded-2xl { border-radius: 6px !important; }
+    .rounded-xl { border-radius: 4px !important; }
+    .rounded-lg { border-radius: 3px !important; }
+    .shadow-lg, .shadow-2xl { box-shadow: none !important; }
+    header { border-top: 3px solid #2FC4C0; }
 
     /*
       Light theme overrides. The rest of this file is written with hardcoded
@@ -89,87 +88,87 @@
       present, instead of rewriting every class in the document.
     */
     html.light-theme body {
-      background-color: #F5F6F2 !important;
-      color: #1B2420 !important;
+      background-color: #F6F4EF !important;
+      color: #071A24 !important;
     }
-    html.light-theme .bg-\[\#0B0F17\] { background-color: #FFFFFF !important; }
+    html.light-theme .bg-\[\#071A24\] { background-color: #FFFFFF !important; }
     html.light-theme .bg-gray-950 { background-color: #FFFFFF !important; }
     html.light-theme .bg-gray-950\/95 { background-color: rgba(255,255,255,0.95) !important; }
-    html.light-theme .bg-gray-900 { background-color: #EFF1EC !important; }
-    html.light-theme .bg-gray-900\/60 { background-color: rgba(239,241,236,0.85) !important; }
-    html.light-theme .bg-gray-900\/80 { background-color: rgba(239,241,236,0.95) !important; }
-    html.light-theme .bg-gray-900\/40 { background-color: rgba(239,241,236,0.6) !important; }
-    html.light-theme .bg-gray-900\/30 { background-color: rgba(239,241,236,0.45) !important; }
-    html.light-theme .bg-gray-800 { background-color: #E3E6DF !important; }
-    html.light-theme .bg-gray-500 { background-color: #8A948C !important; }
-    html.light-theme .bg-black\/70 { background-color: rgba(27,36,32,0.5) !important; }
+    html.light-theme .bg-gray-900 { background-color: #EEF2F1 !important; }
+    html.light-theme .bg-gray-900\/60 { background-color: rgba(238,242,241,0.85) !important; }
+    html.light-theme .bg-gray-900\/80 { background-color: rgba(238,242,241,0.95) !important; }
+    html.light-theme .bg-gray-900\/40 { background-color: rgba(238,242,241,0.6) !important; }
+    html.light-theme .bg-gray-900\/30 { background-color: rgba(238,242,241,0.45) !important; }
+    html.light-theme .bg-gray-800 { background-color: #DFE5E8 !important; }
+    html.light-theme .bg-gray-500 { background-color: #8FA1A7 !important; }
+    html.light-theme .bg-black\/70 { background-color: rgba(7,26,36,0.55) !important; }
 
-    html.light-theme .border-gray-800 { border-color: #D7DBD2 !important; }
-    html.light-theme .border-gray-800\/80 { border-color: rgba(215,219,210,0.9) !important; }
-    html.light-theme .border-gray-800\/60 { border-color: rgba(215,219,210,0.7) !important; }
-    html.light-theme .border-gray-800\/50 { border-color: rgba(215,219,210,0.6) !important; }
-    html.light-theme .border-gray-700 { border-color: #C7CCC0 !important; }
+    html.light-theme .border-gray-800 { border-color: #DFE5E8 !important; }
+    html.light-theme .border-gray-800\/80 { border-color: rgba(223,229,232,0.9) !important; }
+    html.light-theme .border-gray-800\/60 { border-color: rgba(223,229,232,0.7) !important; }
+    html.light-theme .border-gray-800\/50 { border-color: rgba(223,229,232,0.6) !important; }
+    html.light-theme .border-gray-700 { border-color: #C9D3D7 !important; }
 
-    html.light-theme .text-white { color: #14201A !important; }
-    html.light-theme .text-black { color: #14201A !important; }
-    html.light-theme .text-gray-100 { color: #1B2420 !important; }
-    html.light-theme .text-gray-200 { color: #24302B !important; }
-    html.light-theme .text-gray-300 { color: #33403A !important; }
-    html.light-theme .text-gray-400 { color: #5B655C !important; }
-    html.light-theme .text-gray-500 { color: #5B655C !important; }
-    html.light-theme .text-gray-600 { color: #8A948C !important; }
+    html.light-theme .text-white { color: #071A24 !important; }
+    html.light-theme .text-black { color: #071A24 !important; }
+    html.light-theme .text-gray-100 { color: #071A24 !important; }
+    html.light-theme .text-gray-200 { color: #0E2A38 !important; }
+    html.light-theme .text-gray-300 { color: #1B3846 !important; }
+    html.light-theme .text-gray-400 { color: #61787D !important; }
+    html.light-theme .text-gray-500 { color: #61787D !important; }
+    html.light-theme .text-gray-600 { color: #8FA1A7 !important; }
 
     /* Semantic accent colors need darker, higher-contrast versions on a light background */
     html.light-theme .text-brand-300,
     html.light-theme .text-brand-400,
     html.light-theme .text-brand-500,
-    html.light-theme .text-emerald-400 { color: #1F6B4F !important; }
+    html.light-theme .text-emerald-400 { color: #1F7472 !important; }
     html.light-theme .text-red-300,
     html.light-theme .text-red-400 { color: #B3261E !important; }
-    html.light-theme .text-amber-400 { color: #A15A17 !important; }
+    html.light-theme .text-amber-400 { color: #C4481C !important; }
 
     html.light-theme .bg-brand-500\/10,
-    html.light-theme .bg-emerald-500\/10 { background-color: #E4F3EC !important; }
+    html.light-theme .bg-emerald-500\/10 { background-color: #E3F3F2 !important; }
     html.light-theme .bg-red-500\/10 { background-color: #FBEAE8 !important; }
-    html.light-theme .bg-amber-500\/10 { background-color: #F7ECDD !important; }
+    html.light-theme .bg-amber-500\/10 { background-color: #FBEBE2 !important; }
 
     html.light-theme .border-brand-500,
     html.light-theme .border-brand-500\/20,
     html.light-theme .border-brand-500\/50,
-    html.light-theme .border-emerald-500\/20 { border-color: #A9D9C1 !important; }
+    html.light-theme .border-emerald-500\/20 { border-color: #A8DAD8 !important; }
     html.light-theme .border-red-500\/20,
     html.light-theme .border-red-500\/30,
     html.light-theme .border-red-500\/50 { border-color: #EAB3AD !important; }
-    html.light-theme .border-amber-500\/20 { border-color: #E8CBA0 !important; }
+    html.light-theme .border-amber-500\/20 { border-color: #F1C3A8 !important; }
 
     html.light-theme .glass-card {
       background: rgba(255, 255, 255, 0.85) !important;
-      border: 1px solid rgba(27, 36, 32, 0.08) !important;
+      border: 1px solid rgba(7, 26, 36, 0.08) !important;
     }
-    html.light-theme ::-webkit-scrollbar-track { background: #F5F6F2 !important; }
-    html.light-theme ::-webkit-scrollbar-thumb { background: #C7CCC0 !important; }
-    html.light-theme ::-webkit-scrollbar-thumb:hover { background: #A9B2A3 !important; }
+    html.light-theme ::-webkit-scrollbar-track { background: #F6F4EF !important; }
+    html.light-theme ::-webkit-scrollbar-thumb { background: #C9D3D7 !important; }
+    html.light-theme ::-webkit-scrollbar-thumb:hover { background: #A9B9BF !important; }
   </style>
 </head>
-<body class="min-h-screen flex flex-col bg-[#0B0F17] text-gray-100 antialiased selection:bg-brand-500 selection:text-black">
+<body class="min-h-screen flex flex-col bg-[#071A24] text-gray-100 antialiased selection:bg-brand-500 selection:text-black">
 
   <!-- Top Navigation / Header -->
-  <header class="sticky top-0 z-40 border-b border-gray-800/80 bg-[#0B0F17]/90 backdrop-blur-md px-4 lg:px-8 py-3.5">
+  <header class="sticky top-0 z-40 border-b border-gray-800/80 bg-[#071A24]/90 backdrop-blur-md px-4 lg:px-8 py-3.5">
     <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
       
       <!-- Brand & Pilot Info -->
       <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-500 to-emerald-700 flex items-center justify-center text-black font-bold shadow-lg shadow-brand-500/20">
+        <div class="w-10 h-10 rounded-sm bg-brand-500 flex items-center justify-center">
           <i data-lucide="zap" class="w-5 h-5 text-black stroke-[2.5]"></i>
         </div>
         <div>
           <div class="flex items-center gap-2">
-            <h1 class="text-base font-bold tracking-tight text-white">Evcai</h1>
+            <h1 class="text-base font-bold tracking-[0.2em] text-white">ECIDRA</h1>
             <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-brand-500/10 text-brand-500 border border-brand-500/20">
               GEE774 pilot
             </span>
           </div>
-          <p class="text-xs text-gray-400">EV Climate AI — Fleet Verification Console</p>
+          <p class="text-xs text-gray-400">Climate intelligence infrastructure for electric mobility</p>
         </div>
       </div>
 
@@ -382,7 +381,7 @@
 
   <!-- Footer -->
   <footer class="mt-auto border-t border-gray-800/80 py-4 px-6 text-center text-xs text-gray-500 flex flex-col sm:flex-row justify-between items-center max-w-7xl mx-auto w-full gap-2">
-    <div>Evcai (EV Climate AI) &copy; 2026. All rights reserved.</div>
+    <div>ECIDRA &copy; 2026. All rights reserved.</div>
     <div id="footer-note" class="font-mono text-gray-600">Fleet status refreshes every 10 seconds.</div>
   </footer>
 
@@ -1003,7 +1002,7 @@
       const isLight = !document.documentElement.classList.contains('light-theme');
       applyTheme(isLight);
       try {
-        localStorage.setItem('evcai-theme', isLight ? 'light' : 'dark');
+        localStorage.setItem('ecidra-theme', isLight ? 'light' : 'dark');
       } catch (err) {
         // localStorage unavailable (private browsing, etc.) — theme just won't persist
       }
@@ -1012,11 +1011,11 @@
     function loadSavedTheme() {
       let saved = null;
       try {
-        saved = localStorage.getItem('evcai-theme');
+        saved = localStorage.getItem('ecidra-theme');
       } catch (err) {
         // ignore — default to dark
       }
-      applyTheme(saved === 'light');
+      applyTheme(saved !== 'dark');
     }
 
     // Event Listeners & Initial Loads
